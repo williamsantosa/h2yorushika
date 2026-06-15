@@ -1,4 +1,4 @@
-# h2yorushika
+# elmas-diary
 
 A Rockbox theme for the **HiFi Walker H2** (320×240, 16-bit, `erosqnative`). Inspired by Yorushika's *Elma's Diary* cover — oxblood leather, amber gold, off-white text.
 
@@ -18,7 +18,7 @@ A Rockbox theme for the **HiFi Walker H2** (320×240, 16-bit, `erosqnative`). In
 1. Connect the player via USB.
 2. Copy this repo's `.rockbox/` folder into the player's `/.rockbox/` (merge; do not wipe the tree).
 3. Confirm `13-Sazanami-Mincho.fnt` is in `/.rockbox/fonts/`.
-4. On device: **Settings → Theme Settings → Browse Theme Files → h2yorushika**.
+4. On device: **Settings → Theme Settings → Browse Theme Files → elmas-diary**.
 
 ## Test on Windows (simulator)
 
@@ -39,7 +39,7 @@ cd C:\git\h2yorushika
 .\rockboxui.exe --debugwps
 ```
 
-5. Reload the theme: **Settings → Theme Settings → Browse Theme Files → h2yorushika**.
+5. Reload the theme: **Settings → Theme Settings → Browse Theme Files → elmas-diary**.
 
 | Key | Action |
 |-----|--------|
@@ -54,7 +54,7 @@ Put test music under `simdisk/` to preview the WPS.
 
 ## Change the theme
 
-1. Edit skin files in `.rockbox/wps/` and colors in `.rockbox/themes/h2yorushika.cfg`.
+1. Edit skin files in `.rockbox/wps/` and colors in `.rockbox/themes/elmas-diary.cfg`.
 2. Regenerate BMPs if you change the palette or icon art: `python scripts/generate-assets.py`
 3. Sync: `.\scripts\sync-to-sim.ps1`
 4. Copy `.rockbox/` to the player when ready.
@@ -65,13 +65,13 @@ See **[THEME_GUIDE.md](THEME_GUIDE.md)** for how the pieces fit together, tag sy
 
 ```
 .rockbox/
-├── themes/h2yorushika.cfg       # colors, font, paths, peak meter
+├── themes/elmas-diary.cfg       # colors, font, paths, peak meter
 ├── fonts/13-Sazanami-Mincho.fnt
-├── icons/h2yorushika-icons.bmp  # menu icon strip
-├── icons/h2yorushika-viewers.bmp
-├── wps/h2yorushika.wps          # music screen
-├── wps/h2yorushika.sbs          # status bar + menus
-└── wps/h2yorushika/*.bmp        # backdrop, progress bar, status icons
+├── icons/elmas-diary-icons.bmp  # menu icon strip
+├── icons/elmas-diary-viewers.bmp
+├── wps/elmas-diary.wps          # music screen
+├── wps/elmas-diary.sbs          # status bar + menus
+└── wps/elmas-diary/*.bmp        # backdrop, progress bar, status icons
 
 scripts/
 ├── generate-assets.py           # build all BMPs from palette + logo

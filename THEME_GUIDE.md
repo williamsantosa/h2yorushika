@@ -1,6 +1,6 @@
 # Theme guide
 
-How **h2yorushika** is built. Use this to update this theme or start another one.
+How **elmas-diary** is built. Use this to update this theme or start another one.
 
 Target: **320×240**, **16-bit color**, HiFi Walker H2 (`erosqnative`).
 
@@ -62,7 +62,7 @@ The name **SBS** suggests a thin bar at the top. That is only half true.
 
 **WPS never draws the root menu or file tree.** Edit `.wps` for the music screen only.
 
-**SBS draws the status bar and all list UIs.** Root menu tiles, folder listings, settings rows, playlist tracks — all use the `%Vi` / `%Lb` / `%Vl` blocks at the bottom of `h2yorushika.sbs`.
+**SBS draws the status bar and all list UIs.** Root menu tiles, folder listings, settings rows, playlist tracks — all use the `%Vi` / `%Lb` / `%Vl` blocks at the bottom of `elmas-diary.sbs`.
 
 Your `.cfg` sets `statusbar: custom`. That flag tells Rockbox to load the `.sbs` file for the whole non-WPS chrome, not just the top strip.
 
@@ -88,7 +88,7 @@ Firmware  →  what menus exist, what files are in a folder
 icons/*.bmp → glyphs for %xd(I,%LI,2)
 ```
 
-In `h2yorushika.sbs`, the split is explicit:
+In `elmas-diary.sbs`, the split is explicit:
 
 - `%?if(%Lt,=,Rockbox)` → root menu uses `%Lb(tile,160,52,tile)` (2×4 tiles)
 - Everything else → `%Lb(row,320,18)` (18px rows)
@@ -160,13 +160,13 @@ Root menu uses tiles. Submenus use `%Lb(row,320,18)` and a single `%Vl(row,…)`
 
 ## How this theme splits work
 
-### `h2yorushika.cfg`
+### `elmas-diary.cfg`
 
 Sets paths, default colors, peak meter range (`peak meter min: 18` for log-style meters), `statusbar: custom`, `playlist viewer icons: on`.
 
 Foreground `F0E8DC` is off-white. Background `221013` is oxblood.
 
-### `h2yorushika.sbs`
+### `elmas-diary.sbs`
 
 Two jobs in one file: status bar (lines 1–62) and menu chrome (lines 64–86).
 
@@ -183,7 +183,7 @@ Highlights:
 
 Root tiles are gated with `%?if(%Lt,=,Rockbox)`. English menu title only. If you use another UI language, tiles may fall back to a plain list until you adjust that string.
 
-### `h2yorushika.wps`
+### `elmas-diary.wps`
 
 Album art left, metadata right, peak meters above art, progress bar with `pb_back.bmp` + `knob.bmp` slider. No amber fill inside the bar — only the knob moves.
 
@@ -193,7 +193,7 @@ Peak meters use `%pL` / `%pR` over `volbar.bmp` / `vubar.bmp`. Tuning lives in t
 
 ## Icons
 
-Menu icons come from `icons/h2yorushika-icons.bmp` — a vertical strip of 16×16 cells, one per Rockbox icon index (32 slots).
+Menu icons come from `icons/elmas-diary-icons.bmp` — a vertical strip of 16×16 cells, one per Rockbox icon index (32 slots).
 
 In the skin:
 
@@ -225,7 +225,7 @@ python scripts/generate-assets.py
 The script:
 
 1. Renders `backdrop.bmp` (procedural leather texture)
-2. Parses `h2yorushika.sbs` and `h2yorushika.wps` for `%V` positions
+2. Parses `elmas-diary.sbs` and `elmas-diary.wps` for `%V` positions
 3. Cuts status-icon backgrounds from the backdrop at those positions so opaque icons blend
 4. Draws icons (battery, shuffle, play mode, tile highlight, etc.)
 5. Builds menu icon strips from `assets/yorushika-logo.png` + Tango base
@@ -256,7 +256,7 @@ copy .rockbox/ to player
 
 ## Start a new theme from this one
 
-1. Copy the `.rockbox/` tree. Rename `h2yorushika` everywhere (cfg, wps, sbs, folder).
+1. Copy the `.rockbox/` tree. Rename `elmas-diary` everywhere (cfg, wps, sbs, folder).
 2. Update `themes/<name>.cfg` paths to match.
 3. Change palette constants in `generate-assets.py`. Regenerate assets.
 4. Edit layouts in `.wps` and `.sbs`. Keep the 320×240 grid in mind.

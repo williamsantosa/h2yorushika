@@ -1,4 +1,4 @@
-# h2yorushika - Elma's Diary WPS (320x240x16)
+# elmas-diary - Elma's Diary WPS (320x240x16)
 # Album art with stacked L/R peak meters above art, metadata right.
 # Prev / next flanking the bottom of the play area.
 #
@@ -10,17 +10,17 @@
 %xl(U,volbar.bmp,0,0)
 #
 # Peak meters above album art (L on top, R below) — no %VB (it replaces %X backdrop)
-%V(8,40,140,4,-)
+%V(8,40,140,4,1)
 %xd(U)
-%V(8,40,140,4,-)
+%V(8,40,140,4,1)
 %pL(1,1,138,2,P,horizontal)
-%V(8,44,140,4,-)
+%V(8,44,140,4,1)
 %xd(U)
-%V(8,44,140,4,-)
+%V(8,44,140,4,1)
 %pR(1,1,138,2,P,horizontal)
 #
 # Album art 136px, framed
-%V(8,48,140,140,-)
+%V(8,48,140,140,1)
 %xd(F)
 %Cl(2,2,136,136,c,c)
 %Cd
@@ -57,7 +57,7 @@
 %s%arNext · %?It<%It|%Fn>
 #
 # Progress: groove + knob only (nobar suppresses Rockbox's default frame outline)
-%V(8,209,304,14,-)
+%V(8,209,304,14,1)
 %pb(0,0,304,14,backdrop,G,nobar,slider,K)
 #
 # Elapsed / remaining (left), playlist position (center), total time (right)

@@ -1,4 +1,4 @@
-# h2yorushika - custom base skin (status bar shown on WPS and in menus)
+# elmas-diary - custom base skin (status bar shown on WPS and in menus)
 # Brand lockup at left: eye logo + ヨルシカ in gold. Status items follow.
 # Tuned for the 13px Sazanami UI font. 4px margin above/below status items; amber divider.
 #
@@ -10,13 +10,15 @@
 %xl(D,divider.bmp,0,0)
 %xl(L,logo.bmp,0,0)
 %xl(F,tile_sel.bmp,0,0)
+%xl(G,scroll_track.bmp,0,0)
+%xl(H,scroll_thumb.bmp,0,0)
 %xl(I,__list_icons__,0,0)
 #
 # Status bar band: y=4..23 (4px margins), vertical center y=14.
 #   text 14px -> y=7 | play 16px -> y=5 | shuffle/repeat 12px -> y=7 | logo 20px -> y=4
 #
 # Yorushika eye logo, left
-%V(4,4,30,20,-)
+%V(4,4,30,20,1)
 %xd(L)
 #
 # Yorushika in katakana, gold, right of the logo
@@ -29,15 +31,15 @@
 %al%?cc<%cH:%cM|>
 #
 # Play state (stop, play, pause, ff, rew)
-%V(126,5,16,16,-)
+%V(126,5,16,16,1)
 %?mp<%xd(Ma)|%xd(Mb)|%xd(Mc)|%xd(Md)|%xd(Me)>
 #
 # Shuffle (dim silhouette when off, bright when on)
-%V(144,7,14,12,-)
+%V(144,7,14,12,1)
 %?ps<%xd(Sb)|%xd(Sa)>
 #
 # Repeat (dim when off; all / one when active)
-%V(160,7,14,12,-)
+%V(160,7,14,12,1)
 %?mm<%xd(Ra)|%xd(Rb)|%xd(Rc)|%xd(Rb)|%xd(Rb)>
 #
 # Now playing title (center); blank when stopped
@@ -54,11 +56,11 @@
 %ar%bl%%%?bc<+|>
 #
 # Battery icon — flush right
-%V(-21,8,21,12,-)
+%V(-21,8,21,12,1)
 %?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
 #
 # Amber divider: 4px below status items, 4px top margin above
-%V(0,28,320,2,-)
+%V(0,28,320,2,1)
 %xd(D)
 #
 # Content area below the bar + divider (menus, browser, WPS)
@@ -69,9 +71,9 @@
 %?if(%cs,=,1)<%?if(%Lt,=,Rockbox)<%Lb(tile,160,52,tile)%VI(t)|%Lb(row,320,18)%VI(d)>>
 #
 # Tile cells — icon + label; amber frame on selected tile
-%Vl(tile,0,0,160,52,-)
+%Vl(tile,0,0,160,52,1)
 %?Lc<%xd(F)>
-%Vl(tile,72,8,16,16,-)
+%Vl(tile,72,8,16,16,1)
 %xd(I,%LI,2)
 %Vl(tile,4,36,152,14,1)
 %?Lc<%Vf(F0E8DC)|%Vf(C89B5A)>
@@ -80,7 +82,7 @@
 # List rows (submenus, browser, settings, etc.)
 %Vl(row,0,0,320,18,1)
 %?Lc<%dr(0,0,320,18,6B5235,8B6F47)>
-%Vl(row,2,1,16,16,-)
+%Vl(row,2,1,16,16,1)
 %?and(%if(%mp,>,1),%if(%LN,=,%pp))<%xd(I,25,2)|%?if(%LI,=,12)<%xd(I,12,2)|%?if(%LI,!=,-1)<%xd(I,%LI,2)|>>>
 %Vl(row,22,1,296,16,1)
 %s%al%LT

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Rockbox BMP assets for h2yorushika (24-bit, PIL — matches official theme packs)."""
+"""Generate Rockbox BMP assets for elmas-diary (24-bit, PIL — matches official theme packs)."""
 
 from __future__ import annotations
 
@@ -10,10 +10,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / ".rockbox" / "wps" / "h2yorushika"
+OUT = ROOT / ".rockbox" / "wps" / "elmas-diary"
 ICON_OUT = ROOT / ".rockbox" / "icons"
-SBS_PATH = ROOT / ".rockbox" / "wps" / "h2yorushika.sbs"
-WPS_PATH = ROOT / ".rockbox" / "wps" / "h2yorushika.wps"
+SBS_PATH = ROOT / ".rockbox" / "wps" / "elmas-diary.sbs"
+WPS_PATH = ROOT / ".rockbox" / "wps" / "elmas-diary.wps"
 LOGO_SRC = ROOT / "assets" / "yorushika-logo.png"
 TANGO_REF = ROOT / "assets" / "tango_ref.bmp"
 TANGO_VIEWERS_REF = ROOT / "assets" / "tango_viewers_ref.bmp"
@@ -302,6 +302,36 @@ def make_tile_sel(w: int = 160, h: int = 52) -> Image.Image:
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, w - 1, h - 1], outline=BRIGHT, width=2)
     d.rectangle([2, 2, w - 3, h - 3], outline=AMBER_LIGHT)
+    return img
+
+
+def make_scroll_track(w: int = 6, h: int = 208) -> Image.Image:
+    """Vertical scrollbar groove — dark track with a faint amber right edge."""
+    img = Image.new("RGB", (w, h), TRACK)
+    px = img.load()
+    for y in range(h):
+        px[0, y] = BG
+        px[w - 1, y] = DIM_AMBER
+        if w > 2:
+            px[w - 2, y] = lerp_rgb(TRACK, AMBER, 0.18)
+    return img
+
+
+def make_scroll_thumb(w: int = 6, h: int = 18) -> Image.Image:
+    """Scrollbar thumb — amber pill matching list row height."""
+    img = Image.new("RGB", (w, h), TRACK_EDGE)
+    px = img.load()
+    for y in range(1, h - 1):
+        for x in range(1, w - 1):
+            t = y / max(h - 2, 1)
+            col = lerp_rgb(AMBER, BRIGHT, 0.35 + 0.35 * (1 - abs(t - 0.5) * 2))
+            px[x, y] = col
+    for x in range(w):
+        px[x, 0] = AMBER_LIGHT
+        px[x, h - 1] = AMBER
+    for y in range(h):
+        px[0, y] = AMBER
+        px[w - 1, y] = BRIGHT
     return img
 
 
@@ -740,8 +770,10 @@ def main() -> None:
     save_bmp(OUT / "battery.bmp", make_battery())
     save_bmp(OUT / "knob.bmp", make_knob())
     save_bmp(OUT / "tile_sel.bmp", make_tile_sel())
-    save_icon_bmp(ICON_OUT / "h2yorushika-icons.bmp", make_iconset())
-    save_icon_bmp(ICON_OUT / "h2yorushika-viewers.bmp", make_viewers_iconset())
+    save_bmp(OUT / "scroll_track.bmp", make_scroll_track())
+    save_bmp(OUT / "scroll_thumb.bmp", make_scroll_thumb())
+    save_icon_bmp(ICON_OUT / "elmas-diary-icons.bmp", make_iconset())
+    save_icon_bmp(ICON_OUT / "elmas-diary-viewers.bmp", make_viewers_iconset())
     print(f"Wrote 24-bit BMP assets to {OUT}")
     print(f"Wrote menu iconsets to {ICON_OUT}")
 
