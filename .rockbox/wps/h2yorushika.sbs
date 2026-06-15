@@ -1,0 +1,9 @@
+# h2yorushika - HiFi Walker H2 starter theme (320x240x16)
+#
+# Install: copy this file to /.rockbox/wps/h2yorushika.sbs
+#
+# Reserve the top 8 pixels for the status bar; menus use the rest of the screen
+%Vi(-,0,8,-,-,1)
+#
+# Use Rockbox's built-in status bar (battery, volume, clock)
+%wi
