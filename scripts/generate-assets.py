@@ -354,19 +354,20 @@ def make_playmode(fw: int = 16, fh: int = 16) -> Image.Image:
     def oy(i: int) -> int:
         return i * fh
 
+    # Glyphs centered in 16px frame (center y=7) for status bar viewport y=7.
     # stop
-    d.rectangle([4, oy(0) + 4, 11, oy(0) + 11], fill=c)
+    d.rectangle([4, oy(0) + 3, 11, oy(0) + 10], fill=c)
     # play
-    d.polygon([(5, oy(1) + 3), (5, oy(1) + 12), (12, oy(1) + 7)], fill=c)
+    d.polygon([(5, oy(1) + 3), (5, oy(1) + 11), (12, oy(1) + 7)], fill=c)
     # pause
-    d.rectangle([4, oy(2) + 3, 6, oy(2) + 12], fill=c)
-    d.rectangle([9, oy(2) + 3, 11, oy(2) + 12], fill=c)
+    d.rectangle([4, oy(2) + 3, 6, oy(2) + 10], fill=c)
+    d.rectangle([9, oy(2) + 3, 11, oy(2) + 10], fill=c)
     # fast forward
-    d.polygon([(3, oy(3) + 4), (3, oy(3) + 11), (7, oy(3) + 7)], fill=c)
-    d.polygon([(8, oy(3) + 4), (8, oy(3) + 11), (12, oy(3) + 7)], fill=c)
+    d.polygon([(3, oy(3) + 3), (3, oy(3) + 10), (7, oy(3) + 6)], fill=c)
+    d.polygon([(8, oy(3) + 3), (8, oy(3) + 10), (12, oy(3) + 6)], fill=c)
     # rewind
-    d.polygon([(8, oy(4) + 4), (8, oy(4) + 11), (4, oy(4) + 7)], fill=c)
-    d.polygon([(13, oy(4) + 4), (13, oy(4) + 11), (9, oy(4) + 7)], fill=c)
+    d.polygon([(8, oy(4) + 3), (8, oy(4) + 10), (4, oy(4) + 6)], fill=c)
+    d.polygon([(13, oy(4) + 3), (13, oy(4) + 10), (9, oy(4) + 6)], fill=c)
     return img
 
 

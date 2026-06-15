@@ -1,6 +1,6 @@
 # h2yorushika - custom base skin (status bar shown on WPS and in menus)
 # Brand lockup at left: eye logo + ヨルシカ in gold. Status items follow.
-# Tuned for the 13px Sazanami UI font. Amber divider below; content via %Vi.
+# Tuned for the 13px Sazanami UI font. 4px margin above/below status items; amber divider.
 #
 %X(backdrop.bmp)
 %xl(M,playmode.bmp,0,0,5)
@@ -10,50 +10,53 @@
 %xl(D,divider.bmp,0,0)
 %xl(L,logo.bmp,0,0)
 #
+# Status bar band: y=4..23 (4px margins), vertical center y=14.
+#   text 14px -> y=7 | play 16px -> y=5 | 12px icons -> y=8 | logo 20px -> y=4
+#
 # Yorushika eye logo, left
-%V(4,3,30,20,-)
+%V(4,4,30,20,-)
 %xd(L)
 #
 # Yorushika in katakana, gold, right of the logo
-%V(36,6,52,14,1)
+%V(36,7,52,14,1)
 %Vf(C89B5A)
 %alヨルシカ
 #
 # Clock
-%V(92,6,32,14,1)
+%V(92,7,32,14,1)
 %al%?cc<%cH:%cM|>
 #
 # Play state (stop, play, pause, ff, rew)
-%V(126,4,16,16,-)
+%V(126,5,16,16,-)
 %?mp<%xd(Ma)|%xd(Mb)|%xd(Mc)|%xd(Md)|%xd(Me)>
 #
 # Shuffle icon
-%V(144,6,14,12,-)
+%V(144,8,14,12,-)
 %?ps<%xd(S)|>
 #
 # Repeat icon (all / one)
-%V(160,6,14,12,-)
+%V(160,8,14,12,-)
 %?mm<|%xd(Ra)|%xd(Rb)|%xd(Ra)|%xd(Ra)>
 #
 # Date (center)
-%V(176,6,44,14,1)
+%V(176,7,44,14,1)
 %ac%?cc<%cd %cb|>
 #
 # Volume (right)
-%V(222,6,42,14,1)
+%V(222,7,42,14,1)
 %ar%pv dB
 #
 # Battery icon by level: low <20%, mid 20-80%, full >80%
-%V(266,6,21,12,-)
+%V(266,8,21,12,-)
 %?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
 #
 # Battery percent (with + when charging)
-%V(290,6,30,14,1)
+%V(290,7,30,14,1)
 %ar%bl%%%?bc< +|>
 #
-# Amber divider under the bar, with equal space above and below
-%V(0,26,320,2,-)
+# Amber divider: 4px below status items, 4px top margin above
+%V(0,28,320,2,-)
 %xd(D)
 #
 # Content area below the bar + divider (menus, browser, WPS)
-%Vi(-,0,31,-,-,1)
+%Vi(-,0,32,-,-,1)
