@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageOps
@@ -11,18 +12,26 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / ".rockbox" / "wps" / "h2yorushika"
 LOGO_SRC = ROOT / "assets" / "yorushika-logo.png"
 
-BG = (0x1C, 0x18, 0x14)
-BG_LIGHT = (0x28, 0x22, 0x1C)
+# Elma's Diary palette: deep oxblood leather, warm brown edge, dusty-mauve
+# sheen, crimson cracks bleeding through, gold embossed accents.
+BG = (0x22, 0x10, 0x13)        # deep oxblood (top-right, darkest)
+BG_LIGHT = (0x47, 0x28, 0x22)  # warm leather brown (lower-left)
+MAUVE = (0x86, 0x60, 0x68)     # worn, moonlit sheen on the leather
+CRIMSON = (0x9E, 0x2A, 0x1C)   # red cracks showing through near the seam
 AMBER = (0x8B, 0x6F, 0x47)
 AMBER_LIGHT = (0xA8, 0x90, 0x70)
 BRIGHT = (0xC8, 0x9B, 0x5A)
-TRACK = (0x2A, 0x24, 0x1E)
-TRACK_EDGE = (0x3D, 0x35, 0x2C)
+TRACK = (0x32, 0x1A, 0x1E)
+TRACK_EDGE = (0x4E, 0x2C, 0x2C)
 DIM_AMBER = (0x4A, 0x3E, 0x30)
 
 
 def clamp(v: int) -> int:
     return max(0, min(255, v))
+
+
+def clamp01(v: float) -> float:
+    return max(0.0, min(1.0, v))
 
 
 def lerp(a: int, b: int, t: float) -> int:
@@ -33,19 +42,71 @@ def lerp_rgb(c1: tuple[int, int, int], c2: tuple[int, int, int], t: float) -> tu
     return (lerp(c1[0], c2[0], t), lerp(c1[1], c2[1], t), lerp(c1[2], c2[2], t))
 
 
-def backdrop_color(x: int, y: int, width: int = 320, height: int = 240, grain: bool = True) -> tuple[int, int, int]:
-    cx, cy = width * 0.55, height * 0.35
-    max_dist = (width**2 + height**2) ** 0.5
-    t = y / max(height - 1, 1)
-    base = lerp_rgb(BG, BG_LIGHT, t * 0.35)
-    dx, dy = x - cx, y - cy
-    dist = (dx * dx + dy * dy) ** 0.5
-    vignette = min(dist / (max_dist * 0.65), 1.0) * 0.22
-    g = (((x * 17 + y * 31) & 7) - 3) if grain else 0
+def _hash01(ix: int, iy: int, seed: int = 0) -> float:
+    n = (ix * 374761393 + iy * 668265263 + seed * 1274126177) & 0xFFFFFFFF
+    n = ((n ^ (n >> 13)) * 1274126177) & 0xFFFFFFFF
+    n = (n ^ (n >> 16)) & 0xFFFFFFFF
+    return n / 0xFFFFFFFF
+
+
+def _smoothstep(t: float) -> float:
+    t = clamp01(t)
+    return t * t * (3.0 - 2.0 * t)
+
+
+def _value_noise(x: float, y: float, scale: float, seed: int = 0) -> float:
+    gx, gy = x / scale, y / scale
+    ix, iy = math.floor(gx), math.floor(gy)
+    fx, fy = gx - ix, gy - iy
+    ux, uy = _smoothstep(fx), _smoothstep(fy)
+    v00 = _hash01(ix, iy, seed)
+    v10 = _hash01(ix + 1, iy, seed)
+    v01 = _hash01(ix, iy + 1, seed)
+    v11 = _hash01(ix + 1, iy + 1, seed)
+    a = v00 + (v10 - v00) * ux
+    b = v01 + (v11 - v01) * ux
+    return a + (b - a) * uy
+
+
+def _fbm(x: float, y: float, seed: int = 0) -> float:
+    """Layered value noise for the weathered leather grain."""
     return (
-        clamp(int(base[0] * (1.0 - vignette)) + g),
-        clamp(int(base[1] * (1.0 - vignette)) + g),
-        clamp(int(base[2] * (1.0 - vignette)) + g),
+        _value_noise(x, y, 64, seed) * 0.55
+        + _value_noise(x, y, 26, seed + 7) * 0.30
+        + _value_noise(x, y, 10, seed + 19) * 0.15
+    )
+
+
+def backdrop_color(x: int, y: int, width: int = 320, height: int = 240, grain: bool = True) -> tuple[int, int, int]:
+    # Diagonal base: deep oxblood top-right -> warm leather brown lower-left.
+    diag = ((width - 1 - x) / max(width - 1, 1) + y / max(height - 1, 1)) * 0.5
+    col = lerp_rgb(BG, BG_LIGHT, _smoothstep(diag) * 0.85)
+
+    # Dusty-mauve sheen: worn, moonlit patch biased to the center-right band.
+    n = _fbm(x, y)
+    sheen = _smoothstep((n - 0.48) * 2.4)
+    band_x = math.exp(-((x - width * 0.62) ** 2) / (2 * (width * 0.30) ** 2))
+    band_y = math.exp(-((y - height * 0.42) ** 2) / (2 * (height * 0.45) ** 2))
+    col = lerp_rgb(col, MAUVE, sheen * band_x * band_y * 0.42)
+
+    # Crimson cracks: sparse, bright, clustered toward the lower seam.
+    crack = _value_noise(x, y, 5, 101)
+    if grain and crack > 0.9 and y > height * 0.4:
+        depth = (y - height * 0.4) / (height * 0.6)
+        col = lerp_rgb(col, CRIMSON, ((crack - 0.9) / 0.1) * 0.55 * depth)
+
+    # Vignette: pull the corners into shadow.
+    cx, cy = width * 0.5, height * 0.42
+    max_dist = (width**2 + height**2) ** 0.5
+    dist = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+    vignette = min(dist / (max_dist * 0.62), 1.0) * 0.24
+
+    # Fine leather grain: non-directional speckle from the hash.
+    g = int((_hash01(x, y, 53) - 0.5) * 7) if grain else 0
+    return (
+        clamp(int(col[0] * (1.0 - vignette)) + g),
+        clamp(int(col[1] * (1.0 - vignette)) + g),
+        clamp(int(col[2] * (1.0 - vignette)) + g),
     )
 
 
