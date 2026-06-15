@@ -24,10 +24,11 @@ New-Item -ItemType Directory -Force -Path $target | Out-Null
 $items = @(
     @{ Src = "themes\h2yorushika.cfg"; Dst = "themes\h2yorushika.cfg" },
     @{ Src = "wps\h2yorushika.wps"; Dst = "wps\h2yorushika.wps" },
+    @{ Src = "wps\h2yorushika.sbs"; Dst = "wps\h2yorushika.sbs" },
     @{ Src = "fonts\11-Sazanami-Mincho.fnt"; Dst = "fonts\11-Sazanami-Mincho.fnt" }
 )
 
-$imageNames = @("backdrop.bmp", "pb_back.bmp", "pb.bmp")
+$imageNames = @("backdrop.bmp", "pb_back.bmp", "pb.bmp", "logo.bmp", "frame.bmp", "playmode.bmp", "knob.bmp", "shuffle.bmp", "repeat.bmp")
 
 foreach ($item in $items) {
     $from = Join-Path $source $item.Src
@@ -43,7 +44,7 @@ New-Item -ItemType Directory -Force -Path $imagesDst | Out-Null
 foreach ($name in $imageNames) {
     $from = Join-Path $imagesSrc $name
     if (-not (Test-Path $from)) {
-        Write-Error "Missing $name — run: python scripts/generate-assets.py"
+        Write-Error "Missing $name - run: python scripts/generate-assets.py"
     }
     Copy-Item -Path $from -Destination (Join-Path $imagesDst $name) -Force
     Write-Host "Copied image $name"
@@ -56,12 +57,13 @@ $configPath = Join-Path $target "config.cfg"
 if (Test-Path $configPath) {
     $lines = Get-Content $configPath
     $updated = $lines | ForEach-Object {
-        if ($_ -match '^(font|wps|sbs): ') {
+        if ($_ -match '^(font|wps|sbs|statusbar): ') {
             switch -Regex ($_) {
-                '^font: ' { 'font: /.rockbox/fonts/11-Sazanami-Mincho.fnt' }
-                '^wps: '  { 'wps: /.rockbox/wps/h2yorushika.wps' }
-                '^sbs: '  { 'sbs: -' }
-                default   { $_ }
+                '^font: '      { 'font: /.rockbox/fonts/11-Sazanami-Mincho.fnt' }
+                '^wps: '       { 'wps: /.rockbox/wps/h2yorushika.wps' }
+                '^sbs: '       { 'sbs: /.rockbox/wps/h2yorushika.sbs' }
+                '^statusbar: ' { 'statusbar: custom' }
+                default        { $_ }
             }
         } else { $_ }
     }
