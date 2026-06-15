@@ -46,12 +46,12 @@
 %V(228,7,42,14,1)
 %ar%pv dB
 #
-# Battery percent (left of icon; + when charging)
-%V(272,7,26,14,1)
-%ar%bl%%%?bc< +|>
+# Battery percent (right-anchored, flush to icon)
+%V(-49,7,28,14,1)
+%ar%bl%%%?bc<+|>
 #
-# Battery icon — flush right (21px wide, screen 320)
-%V(298,8,21,12,-)
+# Battery icon — flush right
+%V(-21,8,21,12,-)
 %?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
 #
 # Amber divider: 4px below status items, 4px top margin above
