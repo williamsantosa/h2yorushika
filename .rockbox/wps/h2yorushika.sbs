@@ -1,9 +1,59 @@
-# h2yorushika - HiFi Walker H2 starter theme (320x240x16)
+# h2yorushika - custom base skin (status bar shown on WPS and in menus)
+# Brand lockup at left: eye logo + ヨルシカ in gold. Status items follow.
+# Tuned for the 13px Sazanami UI font. Amber divider below; content via %Vi.
 #
-# Install: copy this file to /.rockbox/wps/h2yorushika.sbs
+%X(backdrop.bmp)
+%xl(M,playmode.bmp,0,0,5)
+%xl(S,shuffle.bmp,0,0)
+%xl(R,repeat.bmp,0,0,2)
+%xl(B,battery.bmp,0,0,3)
+%xl(D,divider.bmp,0,0)
+%xl(L,logo.bmp,0,0)
 #
-# Reserve the top 8 pixels for the status bar; menus use the rest of the screen
-%Vi(-,0,8,-,-,1)
+# Yorushika eye logo, left
+%V(4,3,30,20,-)
+%xd(L)
 #
-# Use Rockbox's built-in status bar (battery, volume, clock)
-%wi
+# Yorushika in katakana, gold, right of the logo
+%V(36,6,52,14,1)
+%Vf(C89B5A)
+%alヨルシカ
+#
+# Clock
+%V(92,6,32,14,1)
+%al%?cc<%cH:%cM|>
+#
+# Play state (stop, play, pause, ff, rew)
+%V(126,4,16,16,-)
+%?mp<%xd(Ma)|%xd(Mb)|%xd(Mc)|%xd(Md)|%xd(Me)>
+#
+# Shuffle icon
+%V(144,6,14,12,-)
+%?ps<%xd(S)|>
+#
+# Repeat icon (all / one)
+%V(160,6,14,12,-)
+%?mm<|%xd(Ra)|%xd(Rb)|%xd(Ra)|%xd(Ra)>
+#
+# Date (center)
+%V(176,6,44,14,1)
+%ac%?cc<%cd %cb|>
+#
+# Volume (right)
+%V(222,6,42,14,1)
+%ar%pv dB
+#
+# Battery icon by level: low <20%, mid 20-80%, full >80%
+%V(266,6,21,12,-)
+%?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
+#
+# Battery percent (with + when charging)
+%V(290,6,30,14,1)
+%ar%bl%%%?bc< +|>
+#
+# Amber divider under the bar, with equal space above and below
+%V(0,26,320,2,-)
+%xd(D)
+#
+# Content area below the bar + divider (menus, browser, WPS)
+%Vi(-,0,31,-,-,1)

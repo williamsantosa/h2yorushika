@@ -11,14 +11,14 @@ Theme files mirror the on-device `.rockbox` layout:
 ├── themes/h2yorushika.cfg    # theme config (colors, font, paths)
 ├── wps/h2yorushika.wps       # music player screen
 ├── wps/h2yorushika.sbs       # menu status bar
-└── wps/h2yorushika/images/   # optional BMP assets (backdrop, progress bar, icons)
+└── wps/h2yorushika/          # BMP assets (backdrop, progress bar)
 ```
 
 ## Install on the H2
 
 1. Connect the player via USB.
 2. Copy the contents of `.rockbox/` into the player's `/.rockbox/` folder (merge, don't replace the whole tree).
-3. Ensure `15-Adobe-Helvetica.fnt` is in `/.rockbox/fonts/` ([Rockbox font pack](https://www.rockbox.org/daily.shtml)).
+3. Ensure `11-Sazanami-Mincho.fnt` is in `/.rockbox/fonts/` ([Rockbox font pack](https://www.rockbox.org/daily.shtml)) for Japanese track titles.
 4. On the device: **Settings → Theme Settings → Browse Theme Files → h2yorushika**.
 
 ## Simulator on Windows 11
@@ -41,7 +41,7 @@ This repo holds **only the theme**. Point the simulator at it with the sync scri
    - **`rockboxui-win32-aigo-eros-q-k-native-247-....zip`**
 2. Extract to `C:\RockboxSim` (or any path you prefer).
 3. Run `make install` equivalent once by starting `rockboxui.exe` — it populates `simdisk/.rockbox/` with defaults.
-4. Add the font `15-Adobe-Helvetica.fnt` to `C:\RockboxSim\simdisk\.rockbox\fonts\` if missing.
+4. The font `11-Sazanami-Mincho.fnt` is included in most sim installs under `simdisk/.rockbox/fonts/`.
 5. Optionally add test MP3s under `C:\RockboxSim\simdisk\` to preview the WPS while playing.
 
 ### Sync theme changes to the simulator
@@ -79,7 +79,7 @@ Then run `rockboxui.exe` from the simulator folder. For WPS errors:
 ## Development workflow
 
 1. Edit `.rockbox/wps/h2yorushika.wps` (layout/tags) and `.rockbox/themes/h2yorushika.cfg` (colors, font).
-2. Add BMP images to `.rockbox/wps/h2yorushika/images/` and reference them in the WPS.
+2. Regenerate BMP assets after palette changes: `python scripts/generate-assets.py`
 3. Run `.\scripts\sync-to-sim.ps1` and test in the simulator.
 4. Copy `.rockbox/` to the H2 when ready.
 

@@ -1,42 +1,44 @@
-# h2yorushika - HiFi Walker H2 starter theme (320x240x16)
+# h2yorushika - Elma's Diary WPS (320x240x16)
+# Album art framed on the left, aligned to the progress bar and centered in
+# the band between the menu divider and the progress bar. Metadata stacks to
+# the right: album, artist, title (gold), year, file type / rate.
 #
-# Install: copy this file to /.rockbox/wps/h2yorushika.wps
-# Optional BMP assets go in /.rockbox/wps/h2yorushika/
+%X(backdrop.bmp)
+%xl(F,frame.bmp,0,0)
+%xl(K,knob.bmp,0,0)
 #
-# Hide Rockbox's built-in status bar on the WPS (menus use h2yorushika.sbs)
-%wd
-#
-# Optional backdrop (uncomment after adding images/backdrop.bmp):
-# %X(backdrop.bmp)
-#
-# Album art layout, or a simpler text-only layout when no art is available
-%?C<%Vd(a)|%Vd(b)>
-#
-# --- Track info with album art ---
-%ax%Vl(a,100,20,120,120,-)
-%Cl(0,0,120,120,c,c)
+# Album art 136px, framed, left edge on the progress bar, vertically centered
+%V(8,50,140,140,-)
+%xd(F)
+%Cl(2,2,136,136,c,c)
 %Cd
-%Vl(a,10,148,-10,28,1)
-%s%ac%?it<%it|%fn>
-%Vl(a,10,176,-10,22,1)
-%s%ac%?ia<%ia|%?iA<%iA|%?d(2)<%d(2)|%>>>
-%Vl(a,10,200,-10,18,1)
-%s%ac%?id<%id|%?d(1)<%d(1)|%>>
 #
-# --- Track info without album art ---
-%Vl(b,10,50,-10,40,1)
-%s%ac%?it<%it|%fn>
-%Vl(b,10,95,-10,28,1)
-%s%ac%?ia<%ia|%?iA<%iA|%?d(2)<%d(2)|%>>>
-%Vl(b,10,128,-10,24,1)
-%s%ac%?id<%id|%?d(1)<%d(1)|%>>
-%Vl(b,10,158,-10,20,1)
-%s%ac%?iy<%iy|%>
+# Album
+%V(156,64,156,18,1)
+%s%al%?id<%id|%?d(1)<%d(1)|>>
 #
-# Progress bar (add images/pb.bmp later for a custom bar)
-%V(15,218,290,8,-)
-%pb(0,0,290,8)
+# Artist
+%V(156,88,156,18,1)
+%s%al%?ia<%ia|%?iA<%iA|%?d(2)<%d(2)|>>>
 #
-# Elapsed time and track position
-%V(15,200,290,16,1)
-%al%pc%ac%?Sr<%pe %Sx(of) %pp|%pp %Sx(of) %pe>%ar
+# Song title, emphasized in gold (UI font; larger CJK font will not fit the skin buffer)
+%V(156,112,156,18,1)
+%Vf(C89B5A)
+%s%al%?it<%it|%fn>
+#
+# Date
+%V(156,136,156,18,1)
+%alDate: %?iy<%iy|—>
+#
+# Media type | size | sample rate (%fc is an enum in %?fc<>, so use it plainly)
+%V(156,160,156,18,1)
+%s%al%fc | %fs KB | %fk kHz
+#
+# Progress: thin track frame with a small amber marker that travels left -> right
+%V(8,212,304,14,-)
+%Vf(8B6F47)
+%pb(0,0,304,14,nofill,slider,K)
+#
+# Time elapsed / total and playlist position
+%V(8,227,304,12,1)
+%al%pc%ac%pp %Sx(of) %pe%ar%pt
