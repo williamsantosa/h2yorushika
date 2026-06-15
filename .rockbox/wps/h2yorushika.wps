@@ -1,7 +1,7 @@
 # h2yorushika - Elma's Diary WPS (320x240x16)
 # Album art framed on the left, aligned to the progress bar and centered in
 # the band between the menu divider and the progress bar. Metadata stacks to
-# the right: album, artist, title (gold), year, file type / rate.
+# the right: album, artist, track · title (gold), year, format / size / rate / bitrate.
 #
 %X(backdrop.bmp)
 %xl(F,frame.bmp,0,0)
@@ -21,24 +21,24 @@
 %V(156,86,156,18,1)
 %s%al%?ia<%ia|%?iA<%iA|%?d(2)<%d(2)|>>>
 #
-# Song title, emphasized in gold (UI font; larger CJK font will not fit the skin buffer)
+# Song title (gold); track number prefix when tagged
 %V(156,110,156,18,1)
 %Vf(C89B5A)
-%s%al%?it<%it|%fn>
+%s%al%?in<%in · |>%?it<%it|%fn>
 #
 # Date
 %V(156,134,156,18,1)
 %alDate: %?iy<%iy|—>
 #
-# Media type | size | sample rate (%fc is an enum in %?fc<>, so use it plainly)
+# Media type | size | sample rate | bitrate
 %V(156,158,156,18,1)
-%s%al%fc | %fs KB | %fk kHz
+%s%al%fc | %fs KB | %fk kHz | %fb kbps
 #
 # Progress: 4px bottom margin; time row sits above it
 %V(8,209,304,14,-)
 %Vf(8B6F47)
 %pb(0,0,304,14,nofill,slider,K)
 #
-# Time elapsed / total and playlist position
+# Elapsed / remaining (left), total track time (right)
 %V(8,224,304,12,1)
-%al%pc%ac%pp %Sx(of) %pe%ar%pt
+%al%pc / -%pr%ar%pt
