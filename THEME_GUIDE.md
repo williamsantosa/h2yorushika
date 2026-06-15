@@ -14,7 +14,7 @@ A theme is not one file. Rockbox loads a bundle.
 |------|------|
 | `themes/*.cfg` | Points to WPS, SBS, font, colors, icon paths |
 | `wps/*.wps` | **W**hile **P**laying **S**creen — music UI |
-| `wps/*.sbs` | **S**tatus **B**ar **S**kin — top bar on menus **and** WPS |
+| `wps/*.sbs` | **S**tatus **B**ar **S**kin — status bar, menus, file browser, settings (see below) |
 | `wps/<name>/*.bmp` | Images the skins reference |
 | `fonts/*.fnt` | UI font (needs CJK for Japanese titles) |
 
@@ -41,11 +41,59 @@ y=32  ├───────────────────────�
 y=240 └──────────────────────────────────────┘
 ```
 
-**SBS** owns the top band. **WPS** draws the rest when music is playing. In menus, **SBS** also draws the list area via `%Lb` / `%Vi`.
+**SBS** owns the top band on every screen. **WPS** owns the large area below it only while music is playing. Menus use that same lower area, but **SBS** draws them — not WPS.
 
 Coordinates are pixels. `(0,0)` is top-left. Width is always 320 on this device.
 
 Negative X means “from the right edge.” `%V(-21,8,21,12)` places a 21px-wide box with its left edge at `320 - 21 = 299`.
+
+---
+
+## WPS vs SBS — who draws the menus?
+
+The name **SBS** suggests a thin bar at the top. That is only half true.
+
+| Screen | Top bar (y=0–31) | Main area (y=32–240) |
+|--------|------------------|----------------------|
+| Music (WPS) | SBS | WPS |
+| Root menu | SBS | SBS |
+| File browser | SBS | SBS |
+| Settings, playlists, database | SBS | SBS |
+
+**WPS never draws the root menu or file tree.** Edit `.wps` for the music screen only.
+
+**SBS draws the status bar and all list UIs.** Root menu tiles, folder listings, settings rows, playlist tracks — all use the `%Vi` / `%Lb` / `%Vl` blocks at the bottom of `h2yorushika.sbs`.
+
+Your `.cfg` sets `statusbar: custom`. That flag tells Rockbox to load the `.sbs` file for the whole non-WPS chrome, not just the top strip.
+
+### Firmware vs theme
+
+Rockbox **firmware** owns structure. The theme cannot change it.
+
+- Which items appear in the root menu (Files, Database, Settings, …)
+- How folder navigation works (enter folder, go up, open a file)
+- What happens when you select an item
+
+The **theme** owns appearance.
+
+- Tile grid vs plain list
+- Row height, colors, selection highlight
+- Icons per row (`%LI`), labels (`%LT`)
+- Status bar layout above the list
+
+```
+Firmware  →  what menus exist, what files are in a folder
+.sbs      →  how those lists look (tiles, rows, icons, colors)
+.cfg      →  font, default colors, icon BMP paths
+icons/*.bmp → glyphs for %xd(I,%LI,2)
+```
+
+In `h2yorushika.sbs`, the split is explicit:
+
+- `%?if(%Lt,=,Rockbox)` → root menu uses `%Lb(tile,160,52,tile)` (2×4 tiles)
+- Everything else → `%Lb(row,320,18)` (18px rows)
+
+The file browser uses the **row** layout. Same `%Vl(row,…)` block as Settings and album track lists.
 
 ---
 
@@ -120,7 +168,11 @@ Foreground `F0E8DC` is off-white. Background `221013` is oxblood.
 
 ### `h2yorushika.sbs`
 
-Custom status bar plus menu chrome.
+Two jobs in one file: status bar (lines 1–62) and menu chrome (lines 64–86).
+
+**Status bar:** logo, clock, play/shuffle/repeat, now-playing title, volume, battery, divider.
+
+**Menu chrome:** `%Vi` sets the list area. `%Lb` + `%Vl` paint each cell or row. See [WPS vs SBS](#wps-vs-sbs--who-draws-the-menus) above.
 
 Highlights:
 
