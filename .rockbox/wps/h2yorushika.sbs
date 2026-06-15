@@ -4,14 +4,14 @@
 #
 %X(backdrop.bmp)
 %xl(M,playmode.bmp,0,0,5)
-%xl(S,shuffle.bmp,0,0)
-%xl(R,repeat.bmp,0,0,2)
+%xl(S,shuffle.bmp,0,0,2)
+%xl(R,repeat.bmp,0,0,3)
 %xl(B,battery.bmp,0,0,3)
 %xl(D,divider.bmp,0,0)
 %xl(L,logo.bmp,0,0)
 #
 # Status bar band: y=4..23 (4px margins), vertical center y=14.
-#   text 14px -> y=7 | play 16px -> y=5 | 12px icons -> y=8 | logo 20px -> y=4
+#   text 14px -> y=7 | play 16px -> y=5 | shuffle/repeat 12px -> y=7 | logo 20px -> y=4
 #
 # Yorushika eye logo, left
 %V(4,4,30,20,-)
@@ -30,29 +30,29 @@
 %V(126,5,16,16,-)
 %?mp<%xd(Ma)|%xd(Mb)|%xd(Mc)|%xd(Md)|%xd(Me)>
 #
-# Shuffle icon
-%V(144,8,14,12,-)
-%?ps<%xd(S)|>
+# Shuffle (dim silhouette when off, bright when on)
+%V(144,7,14,12,-)
+%?ps<%xd(Sb)|%xd(Sa)>
 #
-# Repeat icon (all / one)
-%V(160,8,14,12,-)
-%?mm<|%xd(Ra)|%xd(Rb)|%xd(Ra)|%xd(Ra)>
+# Repeat (dim when off; all / one when active)
+%V(160,7,14,12,-)
+%?mm<%xd(Ra)|%xd(Rb)|%xd(Rc)|%xd(Rb)|%xd(Rb)>
 #
-# Date (center)
-%V(176,7,44,14,1)
-%ac%?cc<%cd %cb|>
+# Date (center): year day month
+%V(176,7,52,14,1)
+%s%ac%?cc<%cb %cd %cY|>
 #
-# Volume (right)
-%V(222,7,42,14,1)
+# Volume
+%V(228,7,42,14,1)
 %ar%pv dB
 #
-# Battery icon by level: low <20%, mid 20-80%, full >80%
-%V(266,8,21,12,-)
-%?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
-#
-# Battery percent (with + when charging)
-%V(290,7,30,14,1)
+# Battery percent (left of icon; + when charging)
+%V(272,7,26,14,1)
 %ar%bl%%%?bc< +|>
+#
+# Battery icon — flush right (21px wide, screen 320)
+%V(298,8,21,12,-)
+%?if(%bl,<,20)<%xd(Ba)|%?if(%bl,>,80)<%xd(Bc)|%xd(Bb)>>
 #
 # Amber divider: 4px below status items, 4px top margin above
 %V(0,28,320,2,-)

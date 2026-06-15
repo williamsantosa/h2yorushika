@@ -316,32 +316,37 @@ def make_battery(w: int = 21, h: int = 11) -> Image.Image:
 
 
 def make_shuffle(w: int = 14, h: int = 11) -> Image.Image:
-    img = tile_at("shuffle.bmp", w, h, default=(102, 4))
+    """Two-frame strip: dim (off), bright (on)."""
+    img = tile_at("shuffle.bmp", w, h, frames=2, default=(144, 8))
     d = ImageDraw.Draw(img)
-    c = AMBER_LIGHT
-    d.line([(1, 2), (12, 8)], fill=c, width=1)
-    d.line([(1, 8), (12, 2)], fill=c, width=1)
-    d.polygon([(12, 0), (13, 3), (10, 3)], fill=c)
-    d.polygon([(12, 10), (13, 7), (10, 7)], fill=c)
+
+    def draw_shuffle(oy: int, c: tuple[int, int, int]) -> None:
+        d.line([(1, oy + 2), (12, oy + 8)], fill=c, width=1)
+        d.line([(1, oy + 8), (12, oy + 2)], fill=c, width=1)
+        d.polygon([(12, oy + 0), (13, oy + 3), (10, oy + 3)], fill=c)
+        d.polygon([(12, oy + 10), (13, oy + 7), (10, oy + 7)], fill=c)
+
+    draw_shuffle(0, DIM_AMBER)
+    draw_shuffle(h, AMBER_LIGHT)
     return img
 
 
 def make_repeat(w: int = 14, h: int = 11) -> Image.Image:
-    """Two-frame strip: repeat-all, repeat-one."""
-    img = tile_at("repeat.bmp", w, h, frames=2, default=(118, 4))
+    """Three-frame strip: dim (off), repeat-all, repeat-one."""
+    img = tile_at("repeat.bmp", w, h, frames=3, default=(160, 8))
     d = ImageDraw.Draw(img)
-    c = AMBER_LIGHT
 
-    def loop(oy: int) -> None:
+    def loop(oy: int, c: tuple[int, int, int]) -> None:
         d.line([(2, oy + 2), (10, oy + 2)], fill=c)
         d.line([(10, oy + 2), (10, oy + 7)], fill=c)
         d.line([(3, oy + 8), (10, oy + 8)], fill=c)
         d.line([(3, oy + 3), (3, oy + 8)], fill=c)
         d.polygon([(2, oy + 2), (5, oy + 0), (5, oy + 4)], fill=c)
 
-    loop(0)
-    loop(h)
-    d.line([(7, h + 4), (7, h + 9)], fill=c)
+    loop(0, DIM_AMBER)
+    loop(h, AMBER_LIGHT)
+    loop(h * 2, AMBER_LIGHT)
+    d.line([(7, h * 2 + 4), (7, h * 2 + 9)], fill=AMBER_LIGHT)
     return img
 
 
