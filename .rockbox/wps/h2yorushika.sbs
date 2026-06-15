@@ -40,9 +40,10 @@
 %V(160,7,14,12,-)
 %?mm<%xd(Ra)|%xd(Rb)|%xd(Rc)|%xd(Rb)|%xd(Rb)>
 #
-# Date (center): year day month
+# Now playing title (center); blank when stopped
 %V(176,7,52,14,1)
-%s%ac%?cc<%cb %cd %cY|>
+%Vf(F0E8DC)
+%?if(%mp,>,1)<%s%ac%?it<%it|%fn>|>
 #
 # Volume
 %V(228,7,42,14,1)
@@ -79,7 +80,7 @@
 # List rows (submenus, browser, settings, etc.)
 %Vl(row,0,0,320,18,1)
 %?Lc<%dr(0,0,320,18,6B5235,8B6F47)>
-%Vl(row,2,1,16,16,1)
-%xd(I,%LI,2)
+%Vl(row,2,1,16,16,-)
+%?and(%if(%mp,>,1),%if(%LN,=,%pp))<%xd(I,25,2)|%?if(%LI,=,12)<%xd(I,12,2)|%?if(%LI,!=,-1)<%xd(I,%LI,2)|>>>
 %Vl(row,22,1,296,16,1)
 %s%al%LT

@@ -59,7 +59,7 @@ $configPath = Join-Path $target "config.cfg"
 if (Test-Path $configPath) {
     $lines = Get-Content $configPath
     $updated = $lines | ForEach-Object {
-        if ($_ -match '^(font|wps|sbs|statusbar|iconset|viewers iconset|peak meter dbfs|peak meter min|peak meter max): ') {
+        if ($_ -match '^(font|wps|sbs|statusbar|iconset|viewers iconset|peak meter dbfs|peak meter min|peak meter max|playlist viewer icons): ') {
             switch -Regex ($_) {
                 '^font: '              { 'font: /.rockbox/fonts/13-Sazanami-Mincho.fnt' }
                 '^wps: '               { 'wps: /.rockbox/wps/h2yorushika.wps' }
@@ -70,6 +70,7 @@ if (Test-Path $configPath) {
                 '^peak meter dbfs: '   { 'peak meter dbfs: on' }
                 '^peak meter min: '    { 'peak meter min: 18' }
                 '^peak meter max: '    { 'peak meter max: 0' }
+                '^playlist viewer icons: ' { 'playlist viewer icons: on' }
                 default                { $_ }
             }
         } else { $_ }
@@ -85,9 +86,11 @@ if (Test-Path $configPath) {
     $hasPeakDbfs = $updated | Where-Object { $_ -match '^peak meter dbfs: ' }
     $hasPeakMin = $updated | Where-Object { $_ -match '^peak meter min: ' }
     $hasPeakMax = $updated | Where-Object { $_ -match '^peak meter max: ' }
+    $hasPlaylistIcons = $updated | Where-Object { $_ -match '^playlist viewer icons: ' }
     if (-not $hasPeakDbfs) { $updated += 'peak meter dbfs: on' }
     if (-not $hasPeakMin) { $updated += 'peak meter min: 18' }
     if (-not $hasPeakMax) { $updated += 'peak meter max: 0' }
+    if (-not $hasPlaylistIcons) { $updated += 'playlist viewer icons: on' }
     Set-Content -Path $configPath -Value $updated -Encoding UTF8
     Write-Host "Updated config.cfg (font, wps, sbs, iconset, peak meter)"
 }

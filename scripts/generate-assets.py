@@ -133,6 +133,18 @@ def bg_at(x: int, y: int) -> tuple[int, int, int]:
 BACKDROP: Image.Image | None = None
 
 
+LCD_W, LCD_H = 320, 240
+
+
+def screen_xy(x: int, y: int) -> tuple[int, int]:
+    """Rockbox %V: negative x/y are measured from the right/bottom edge."""
+    if x < 0:
+        x = LCD_W + x
+    if y < 0:
+        y = LCD_H + y
+    return x, y
+
+
 def bg_tile(dx: int, dy: int, w: int, h: int, frames: int = 1) -> Image.Image:
     """Icon background cut straight from the backdrop at the spot it is drawn.
 
@@ -142,6 +154,7 @@ def bg_tile(dx: int, dy: int, w: int, h: int, frames: int = 1) -> Image.Image:
     """
     if BACKDROP is None:
         raise RuntimeError("BACKDROP not rendered yet")
+    dx, dy = screen_xy(dx, dy)
     crop = BACKDROP.crop((dx, dy, dx + w, dy + h)).convert("RGB")
     if frames == 1:
         return crop.copy()
@@ -401,29 +414,88 @@ def _icon_tile(draw_fn) -> Image.Image:
     return tile
 
 
+def _draw_folder(d: ImageDraw.ImageDraw, x0: int = 2, y0: int = 2, w: int = 12, h: int = 11) -> None:
+    """Shared folder glyph with a visible tab."""
+    tab_h = 3
+    tab_w = 5
+    body_top = y0 + tab_h
+    d.polygon(
+        [
+            (x0, body_top),
+            (x0 + 3, body_top),
+            (x0 + 4, y0 + 1),
+            (x0 + tab_w + 3, y0 + 1),
+            (x0 + tab_w + 4, body_top),
+            (x0 + w, body_top),
+            (x0 + w, y0 + h),
+            (x0, y0 + h),
+        ],
+        outline=INK,
+    )
+    d.polygon(
+        [
+            (x0 + 1, body_top + 1),
+            (x0 + 3, body_top + 1),
+            (x0 + 4, y0 + 2),
+            (x0 + tab_w + 3, y0 + 2),
+            (x0 + tab_w + 4, body_top + 1),
+            (x0 + w - 1, body_top + 1),
+            (x0 + w - 1, y0 + h - 1),
+            (x0 + 1, y0 + h - 1),
+        ],
+        fill=INK_FAINT,
+    )
+
+
 def _draw_menu_files(d: ImageDraw.ImageDraw) -> None:
     """Files browser (Icon_file_view_menu)."""
-    d.polygon([(3, 5), (6, 5), (7, 3), (12, 3), (13, 5), (13, 12), (3, 12)], outline=INK)
-    d.polygon([(4, 6), (6, 6), (7, 4), (12, 4), (12, 11), (4, 11)], fill=INK_FAINT)
-    d.line([(6, 8), (10, 8)], fill=INK_DIM)
+    _draw_folder(d)
+    d.line([(5, 9), (11, 9)], fill=INK_DIM)
 
 
-def _draw_menu_database(d: ImageDraw.ImageDraw) -> None:
-    """Database / tagcache (root menu uses Icon_Audio)."""
-    d.ellipse([4, 2, 11, 5], outline=INK, fill=INK_FAINT)
-    d.rectangle([4, 3, 11, 7], fill=INK_FAINT, outline=INK)
-    d.ellipse([4, 6, 11, 9], outline=INK, fill=INK_FAINT)
-    d.rectangle([4, 7, 11, 11], fill=INK_FAINT, outline=INK)
-    d.ellipse([4, 10, 11, 13], outline=INK, fill=INK_FAINT)
+def _draw_icon_folder(d: ImageDraw.ImageDraw) -> None:
+    """Folder entries in the file browser (Icon_Folder)."""
+    _draw_folder(d)
 
 
-def _draw_menu_playlist(d: ImageDraw.ImageDraw) -> None:
-    """Playlists (Icon_Playlist)."""
-    d.rectangle([3, 2, 12, 13], outline=INK)
-    for y in (5, 8, 11):
-        d.line([(5, y), (10, y)], fill=INK_DIM)
-    d.ellipse([9, 9, 12, 12], outline=INK, fill=INK_FAINT)
-    d.polygon([(10, 8), (10, 11), (12, 9)], fill=INK)
+def _draw_icon_audio(d: ImageDraw.ImageDraw) -> None:
+    """Audio tracks (Icon_Audio)."""
+    d.ellipse([3, 8, 8, 13], fill=INK)
+    d.rectangle([7, 3, 8, 10], fill=INK)
+    d.polygon([(8, 3), (12, 5), (12, 7), (8, 6)], fill=INK)
+
+
+def _draw_icon_queued(d: ImageDraw.ImageDraw) -> None:
+    """Queued track (Icon_Queued)."""
+    d.rectangle([3, 5, 4, 10], fill=INK)
+    d.line([(4, 7), (9, 7)], fill=INK_DIM)
+    d.polygon([(9, 5), (13, 7), (9, 9)], fill=INK)
+
+
+def _draw_icon_playlist(d: ImageDraw.ImageDraw) -> None:
+    """Playlist menus (Icon_Playlist) — note + queued tracks."""
+    d.ellipse([2, 8, 6, 12], fill=INK)
+    d.rectangle([5, 4, 6, 10], fill=INK)
+    d.polygon([(6, 4), (9, 5), (9, 7), (6, 6)], fill=INK)
+    for y, bright in ((3, True), (6, False), (9, False), (12, False)):
+        d.line([(8, y), (13, y)], fill=INK if bright else INK_DIM)
+
+
+def _draw_icon_language(d: ImageDraw.ImageDraw) -> None:
+    """UI language picker (Icon_Language) — globe."""
+    d.ellipse([3, 3, 12, 12], outline=INK, fill=INK_FAINT)
+    d.line([(8, 3), (8, 12)], fill=INK)
+    d.line([(4, 7), (11, 7)], fill=INK_DIM)
+    d.ellipse([5, 4, 10, 11], outline=INK_DIM)
+
+
+def _draw_icon_database(d: ImageDraw.ImageDraw) -> None:
+    """Tagcache submenu (Icon_Submenu fallback for Database)."""
+    d.ellipse([4, 2, 11, 4], outline=INK, fill=INK_FAINT)
+    d.rectangle([4, 3, 11, 6], fill=INK_FAINT, outline=INK)
+    d.ellipse([4, 5, 11, 7], outline=INK, fill=INK_FAINT)
+    d.rectangle([4, 6, 11, 9], fill=INK_FAINT, outline=INK)
+    d.ellipse([4, 8, 11, 10], outline=INK, fill=INK_FAINT)
 
 
 def _draw_menu_plugin(d: ImageDraw.ImageDraw) -> None:
@@ -493,21 +565,24 @@ def _draw_menu_system(d: ImageDraw.ImageDraw) -> None:
 
 
 def _draw_menu_now_playing(d: ImageDraw.ImageDraw) -> None:
-    """Now playing / resume (Icon_Playback_menu)."""
-    d.rounded_rectangle([3, 3, 12, 11], radius=2, outline=INK)
+    """Now playing / resume (Icon_Playback_menu) and list now-playing marker."""
+    d.ellipse([3, 3, 12, 12], outline=INK, fill=INK_FAINT)
     d.polygon([(6, 5), (6, 10), (11, 7)], fill=INK)
-    d.line([(5, 12), (10, 12)], fill=INK_DIM)
 
 
 # Icon indices from apps/gui/icon.h (0-based after Icon_NOICON=-1).
 # Menu assignments from apps/root_menu.c, apps/menus/main_menu.c, theme_menu.c.
 MENU_ICON_OVERRIDES: dict[int, object] = {
-    0: _draw_menu_database,           # Database (Icon_Audio in root menu)
-    2: _draw_menu_playlist,           # Playlists
+    0: _draw_icon_audio,              # Tracks + Database root tile (Icon_Audio)
+    1: _draw_icon_folder,             # Folders in file browser (Icon_Folder)
+    2: _draw_icon_playlist,           # Playlists (Icon_Playlist)
     4: _draw_menu_theme,              # Theme Settings (Icon_Wps)
+    7: _draw_icon_language,           # Language (Icon_Language)
     9: _draw_menu_plugin,             # Plugins
     10: _draw_menu_bookmark,          # Bookmarks / shortcuts (Icon_Bookmark)
+    12: _draw_icon_queued,            # Queued track (Icon_Queued)
     17: _draw_menu_setting,           # Time & Date + MT_SETTING fallback
+    19: _draw_icon_database,          # Database submenu (Icon_Submenu fallback)
     20: _draw_menu_settings,          # Settings root (Icon_Submenu_Entered)
     23: _draw_menu_general_settings,  # General Settings
     24: _draw_menu_system,            # System
