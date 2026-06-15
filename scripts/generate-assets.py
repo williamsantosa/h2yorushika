@@ -258,8 +258,21 @@ def make_frame(size: int = 104) -> Image.Image:
     return img
 
 
-def make_vubar(w: int = 12, h: int = 128) -> Image.Image:
-    """Solid bright-amber block. One segment of the side peak meters, shown when lit."""
+def make_volbar(w: int = 140, h: int = 4) -> Image.Image:
+    """Peak meter groove: dark interior with amber perimeter."""
+    img = Image.new("RGB", (w, h), TRACK)
+    px = img.load()
+    for x in range(w):
+        px[x, 0] = AMBER
+        px[x, h - 1] = AMBER
+    for y in range(h):
+        px[0, y] = AMBER
+        px[w - 1, y] = AMBER
+    return img
+
+
+def make_vubar(w: int = 138, h: int = 2) -> Image.Image:
+    """Amber fill for peak meter interior (inset inside volbar perimeter)."""
     return Image.new("RGB", (w, h), BRIGHT)
 
 
@@ -629,6 +642,7 @@ def main() -> None:
     save_bmp(OUT / "playmode.bmp", make_playmode())
     save_bmp(OUT / "shuffle.bmp", make_shuffle())
     save_bmp(OUT / "repeat.bmp", make_repeat())
+    save_bmp(OUT / "volbar.bmp", make_volbar())
     save_bmp(OUT / "vubar.bmp", make_vubar())
     save_bmp(OUT / "divider.bmp", make_divider())
     save_bmp(OUT / "battery.bmp", make_battery())

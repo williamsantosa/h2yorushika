@@ -30,7 +30,7 @@ $items = @(
     @{ Src = "icons\h2yorushika-viewers.bmp"; Dst = "icons\h2yorushika-viewers.bmp" }
 )
 
-$imageNames = @("backdrop.bmp", "pb_back.bmp", "logo.bmp", "frame.bmp", "playmode.bmp", "shuffle.bmp", "repeat.bmp", "vubar.bmp", "divider.bmp", "battery.bmp", "knob.bmp")
+$imageNames = @("backdrop.bmp", "pb_back.bmp", "logo.bmp", "frame.bmp", "playmode.bmp", "shuffle.bmp", "repeat.bmp", "volbar.bmp", "vubar.bmp", "divider.bmp", "battery.bmp", "knob.bmp")
 
 foreach ($item in $items) {
     $from = Join-Path $source $item.Src
