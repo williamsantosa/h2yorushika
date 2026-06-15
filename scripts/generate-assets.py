@@ -274,6 +274,24 @@ def make_knob(w: int = 7, h: int = 14) -> Image.Image:
     return img
 
 
+def make_tile_sel(w: int = 160, h: int = 52) -> Image.Image:
+    """Root menu tile highlight: amber-tinted cell with bright border."""
+    img = bg_tile(0, 32, w, h)
+    px = img.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            px[x, y] = (
+                clamp(int(r * 0.5 + BRIGHT[0] * 0.5)),
+                clamp(int(g * 0.5 + BRIGHT[1] * 0.5)),
+                clamp(int(b * 0.5 + BRIGHT[2] * 0.5)),
+            )
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, w - 1, h - 1], outline=BRIGHT, width=2)
+    d.rectangle([2, 2, w - 3, h - 3], outline=AMBER_LIGHT)
+    return img
+
+
 def make_divider(w: int = 320, h: int = 2) -> Image.Image:
     """Bright-amber rule under the top bar, faded at both ends."""
     img = Image.new("RGB", (w, h))
@@ -384,29 +402,41 @@ def _icon_tile(draw_fn) -> Image.Image:
 
 
 def _draw_menu_files(d: ImageDraw.ImageDraw) -> None:
-    d.polygon([(2, 6), (6, 6), (7, 4), (11, 4), (12, 6), (13, 6)], fill=INK_DIM)
-    d.rectangle([2, 6, 13, 13], outline=INK)
+    """Files browser (Icon_file_view_menu)."""
+    d.polygon([(3, 5), (6, 5), (7, 3), (12, 3), (13, 5), (13, 12), (3, 12)], outline=INK)
+    d.polygon([(4, 6), (6, 6), (7, 4), (12, 4), (12, 11), (4, 11)], fill=INK_FAINT)
+    d.line([(6, 8), (10, 8)], fill=INK_DIM)
+
+
+def _draw_menu_database(d: ImageDraw.ImageDraw) -> None:
+    """Database / tagcache (root menu uses Icon_Audio)."""
+    d.ellipse([4, 2, 11, 5], outline=INK, fill=INK_FAINT)
+    d.rectangle([4, 3, 11, 7], fill=INK_FAINT, outline=INK)
+    d.ellipse([4, 6, 11, 9], outline=INK, fill=INK_FAINT)
+    d.rectangle([4, 7, 11, 11], fill=INK_FAINT, outline=INK)
+    d.ellipse([4, 10, 11, 13], outline=INK, fill=INK_FAINT)
 
 
 def _draw_menu_playlist(d: ImageDraw.ImageDraw) -> None:
-    d.rectangle([4, 2, 12, 13], outline=INK)
+    """Playlists (Icon_Playlist)."""
+    d.rectangle([3, 2, 12, 13], outline=INK)
     for y in (5, 8, 11):
-        d.line([(6, y), (11, y)], fill=INK_DIM)
-    d.ellipse([9, 10, 11, 12], fill=INK)
-    d.line([(10, 7), (10, 10)], fill=INK)
+        d.line([(5, y), (10, y)], fill=INK_DIM)
+    d.ellipse([9, 9, 12, 12], outline=INK, fill=INK_FAINT)
+    d.polygon([(10, 8), (10, 11), (12, 9)], fill=INK)
 
 
 def _draw_menu_plugin(d: ImageDraw.ImageDraw) -> None:
-    c = INK
-    d.line([(8, 2), (8, 13)], fill=c)
-    d.line([(2, 7), (13, 7)], fill=c)
-    d.line([(4, 4), (12, 11)], fill=INK_DIM)
-    d.line([(12, 4), (4, 11)], fill=INK_DIM)
-    d.rectangle([7, 6, 8, 8], fill=c)
+    """Plugins (Icon_Plugin)."""
+    d.rectangle([6, 2, 9, 5], fill=INK)
+    d.rectangle([2, 6, 5, 9], fill=INK)
+    d.rectangle([10, 6, 13, 9], fill=INK)
+    d.rectangle([6, 10, 9, 13], fill=INK)
+    d.rectangle([6, 6, 9, 9], fill=INK_FAINT, outline=INK)
 
 
 def _draw_menu_theme(d: ImageDraw.ImageDraw) -> None:
-    """Theme Settings — screen + palette swatches (Icon_Wps, slot 4)."""
+    """Theme Settings (Icon_Wps)."""
     d.rectangle([2, 3, 9, 10], outline=INK)
     d.line([(4, 6), (7, 6)], fill=INK_DIM)
     d.line([(4, 8), (7, 8)], fill=INK_FAINT)
@@ -415,17 +445,15 @@ def _draw_menu_theme(d: ImageDraw.ImageDraw) -> None:
     d.ellipse([9, 9, 11, 11], fill=INK_FAINT)
 
 
-def _draw_menu_shortcuts(d: ImageDraw.ImageDraw) -> None:
-    """Shortcuts — keyboard grid + lightning bolt (Icon_Bookmark, slot 10)."""
-    d.rectangle([2, 7, 13, 13], outline=INK)
-    d.line([(5, 7), (5, 13)], fill=INK_DIM)
-    d.line([(9, 7), (9, 13)], fill=INK_DIM)
-    d.line([(2, 10), (13, 10)], fill=INK_DIM)
-    d.polygon([(4, 2), (7, 6), (6, 6), (8, 10), (5, 7), (6, 7)], fill=INK)
+def _draw_menu_bookmark(d: ImageDraw.ImageDraw) -> None:
+    """Bookmarks / shortcuts (Icon_Bookmark)."""
+    d.polygon([(4, 2), (12, 2), (12, 12), (8, 9), (4, 12)], outline=INK)
+    d.polygon([(5, 3), (11, 3), (11, 11), (8, 9), (5, 11)], fill=INK_FAINT)
+    d.line([(8, 3), (8, 8)], fill=INK_DIM)
 
 
 def _draw_menu_setting(d: ImageDraw.ImageDraw) -> None:
-    """Per-item settings — clock face (Icon_Menu_setting, slot 17; shared fallback)."""
+    """Per-item settings — clock face (Icon_Menu_setting)."""
     d.ellipse([3, 3, 12, 12], outline=INK)
     d.ellipse([6, 6, 9, 9], fill=INK_FAINT)
     d.line([(7, 7), (7, 5)], fill=INK)
@@ -433,40 +461,40 @@ def _draw_menu_setting(d: ImageDraw.ImageDraw) -> None:
 
 
 def _draw_menu_settings(d: ImageDraw.ImageDraw) -> None:
-    """Settings root — cog + submenu arrow (Icon_Submenu_Entered, slot 20)."""
-    d.ellipse([2, 4, 9, 11], outline=INK)
-    d.ellipse([4, 6, 7, 9], fill=INK_FAINT)
-    for i in range(6):
-        a = i * math.pi / 3
-        x0 = 5.5 + 5 * math.cos(a)
-        y0 = 7.5 + 5 * math.sin(a)
-        x1 = 5.5 + 3 * math.cos(a)
-        y1 = 7.5 + 3 * math.sin(a)
-        d.line([(x0, y0), (x1, y1)], fill=INK, width=1)
-    d.polygon([(10, 6), (10, 9), (13, 7)], fill=INK)
+    """Settings root (Icon_Submenu_Entered) — eight-tooth gear."""
+    for box in (
+        (7, 1, 8, 3),     # N
+        (7, 12, 8, 14),   # S
+        (1, 7, 3, 8),     # W
+        (12, 7, 14, 8),   # E
+        (10, 2, 12, 4),   # NE
+        (10, 11, 12, 13), # SE
+        (3, 11, 5, 13),   # SW
+        (3, 2, 5, 4),     # NW
+    ):
+        d.rectangle(box, fill=INK)
+    d.ellipse([3, 3, 12, 12], outline=INK, fill=INK_FAINT)
+    d.ellipse([6, 6, 9, 9], fill=INK_SHADOW)
 
 
 def _draw_menu_general_settings(d: ImageDraw.ImageDraw) -> None:
-    """General Settings — three sliders (Icon_General_settings_menu, slot 23)."""
+    """General Settings — three sliders (Icon_General_settings_menu)."""
     for y, knob in ((4, 9), (7, 6), (10, 11)):
         d.line([(2, y), (13, y)], fill=INK_DIM)
         d.rectangle([knob - 1, y - 1, knob + 1, y + 1], fill=INK)
 
 
 def _draw_menu_system(d: ImageDraw.ImageDraw) -> None:
-    d.ellipse([4, 4, 11, 11], outline=INK)
+    """System (Icon_System_menu) — info mark in circle."""
+    d.ellipse([3, 3, 12, 12], outline=INK)
     d.ellipse([6, 6, 9, 9], fill=INK_FAINT)
-    for i in range(8):
-        a = i * math.pi / 4
-        x0 = 7.5 + 5 * math.cos(a)
-        y0 = 7.5 + 5 * math.sin(a)
-        x1 = 7.5 + 3 * math.cos(a)
-        y1 = 7.5 + 3 * math.sin(a)
-        d.line([(x0, y0), (x1, y1)], fill=INK, width=1)
+    d.rectangle([7, 4, 8, 6], fill=INK)
+    d.rectangle([7, 8, 8, 11], fill=INK)
 
 
 def _draw_menu_now_playing(d: ImageDraw.ImageDraw) -> None:
-    d.rectangle([3, 3, 12, 11], outline=INK)
+    """Now playing / resume (Icon_Playback_menu)."""
+    d.rounded_rectangle([3, 3, 12, 11], radius=2, outline=INK)
     d.polygon([(6, 5), (6, 10), (11, 7)], fill=INK)
     d.line([(5, 12), (10, 12)], fill=INK_DIM)
 
@@ -474,10 +502,11 @@ def _draw_menu_now_playing(d: ImageDraw.ImageDraw) -> None:
 # Icon indices from apps/gui/icon.h (0-based after Icon_NOICON=-1).
 # Menu assignments from apps/root_menu.c, apps/menus/main_menu.c, theme_menu.c.
 MENU_ICON_OVERRIDES: dict[int, object] = {
+    0: _draw_menu_database,           # Database (Icon_Audio in root menu)
     2: _draw_menu_playlist,           # Playlists
     4: _draw_menu_theme,              # Theme Settings (Icon_Wps)
     9: _draw_menu_plugin,             # Plugins
-    10: _draw_menu_shortcuts,         # Shortcuts (Icon_Bookmark)
+    10: _draw_menu_bookmark,          # Bookmarks / shortcuts (Icon_Bookmark)
     17: _draw_menu_setting,           # Time & Date + MT_SETTING fallback
     20: _draw_menu_settings,          # Settings root (Icon_Submenu_Entered)
     23: _draw_menu_general_settings,  # General Settings
@@ -635,6 +664,7 @@ def main() -> None:
     save_bmp(OUT / "divider.bmp", make_divider())
     save_bmp(OUT / "battery.bmp", make_battery())
     save_bmp(OUT / "knob.bmp", make_knob())
+    save_bmp(OUT / "tile_sel.bmp", make_tile_sel())
     save_icon_bmp(ICON_OUT / "h2yorushika-icons.bmp", make_iconset())
     save_icon_bmp(ICON_OUT / "h2yorushika-viewers.bmp", make_viewers_iconset())
     print(f"Wrote 24-bit BMP assets to {OUT}")

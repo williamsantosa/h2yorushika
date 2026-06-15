@@ -1,0 +1,104 @@
+%wd
+
+%Fl(2,9-misaki_gothic_2nd.fnt)
+%Fl(3,23-aakar-medium.fnt)
+
+# Load Backdrop
+%X(BackGndWPS_16.bmp)
+
+%V(0,0,320,240,-)
+%Vd(T)%Vd(F)%Vd(P)%Vd(a)%Vd(b)
+
+# Art or not
+%?C<%Vd(x)|%Vd(Y)>
+
+# cover art
+%Cl(0,0,68,68,c,c)
+%Vl(x,24,25,68,68,-)
+%Cd
+
+#song info
+%Vl(x,100,24,200,51,1)%Vf(-)
+%?it<%s%al%it|%?fn<%s%al%fn|%al*UNKNOWN TITLE*>>
+%?id<%s%al%id|%al*UNKNOWN ALBUM*>
+%?ia<%s%al%ia|%al*UNKNOWN ARTIST*>
+%Vl(x,120,79,54,8,2)%Vf(-)
+%ar%fc %fbkbps%fv
+%Vl(x,185,79,33,8,2)%Vf(-)
+%ar%fkkHz
+
+%Vl(Y,100,24,200,51,1)%Vf(-)
+%?it<%s%al%it|%?fn<%s%al%fn|%al*UNKNOWN TITLE*>>
+%?id<%s%al%id|%al*UNKNOWN ALBUM*>
+%?ia<%s%al%ia|%al*UNKNOWN ARTIST*>
+%Vl(Y,120,79,54,8,2)%Vf(-)
+%ar%fc %fbkbps%fv
+%Vl(Y,185,79,33,8,2)%Vf(-)
+%ar%fkkHz
+
+# date and time
+%Vl(T,220,79,90,8,2)%Vf(-)%Vb(000000)
+%ar%?cc<%cY-%cm-%cd/%?cf<%cH:%cM|%cl:%cM %cp>|--:--> D/T
+
+# play time
+%Vl(F,197,92,80,16,3)%Vf(4E4535)
+%ac%pc
+
+# volume level
+%V(148,97,31,8,2)%Vf(4E4535)
+%ac%pvdB
+
+# progressbar
+%xl(S,pslide_16.bmp,15,9)
+%Vl(P,10,110,300,9,-)
+%pb(0,0,300,9,-,nobar,slider,S)
+
+# track time info
+%Vl(a,163,124,76,8,2)%Vf(-)
+%al%pp/%pe%ar%pc/%pt
+
+# battery time
+%Vl(b,163,136,60,8,2)%Vf(-)
+%al%bt%ar%bl%%
+
+# battery symbol gold
+%xl(B,Battery14x7_16.bmp,0,0,13)
+%V(225,136,14,7,-)
+%?bp<%?bc<%xd(Ba)|%xd(Bb)>|%?bl<|%xd(Bc)|%xd(Bd)|%xd(Be)|%xd(Bf)|%xd(Bg)|%xd(Bh)|%xd(Bi)|%xd(Bj)|%xd(Bk)|%xd(Bl)|%xd(Bm)>>
+
+# battery symbol analog
+%xl(D,a_battery_16.bmp,7)
+%V(139,167,43,12,-)
+%?bl<|%xd(Da)|%xd(Db)|%xd(Dc)|%xd(Dd)|%xd(De)|%xd(Df)|%xd(Dg)>
+
+# volume knob
+%xl(G,vknob_16.bmp,0,0,28)
+%V(110,93,18,13,-)
+%?pv<%xd(Ga)|%xd(Gb)|%xd(Gc)|%xd(Gd)|%xd(Ge)|%xd(Gf)|%xd(Gg)|%xd(Gh)|%xd(Gi)|%xd(Gj)|%xd(Gk)|%xd(Gl)|%xd(Gm)|%xd(Gn)|%xd(Go)|%xd(Gp)|%xd(Gq)|%xd(Gr)|%xd(Gs)|%xd(Gt)|%xd(Gu)|%xd(Gv)|%xd(Gw)|%xd(Gx)|%xd(Gy)|%xd(Gz)|%xd(GA)|%xd(GB)>
+
+# button set
+%xl(C,b_buttons_16.bmp,6)
+%V(16,125,114,18,-)
+%?mp<%xd(Cb)|%xd(Cc)|%xd(Cd)|%xd(Ce)|%xd(Cf)>
+
+#repeat mode display
+%V(100,79,20,8,2)
+%?mm<%alOFF|%alALL|%alONE|%alSH|%alA-B>
+
+# repeat mode switches
+%xl(t,i_onoff_16.bmp,2)
+%V(153,188,16,8,-)
+%?mm<%xd(tb)|%xd(ta)|%xd(ta)|%xd(tb)|%xd(ta)>
+#shuffle switch
+%V(153,204,16,8,-)
+%?mm<%xd(tb)|%xd(tb)|%xd(tb)|%xd(ta)|%xd(tb)>
+#hold switch
+%V(153,220,16,8,-)
+%?mh<%xd(ta)|%xd(tb)>
+
+# analog peak meter needles
+%xl(N,vumeter_16.bmp,0,0,19)
+%V(26,183,76,50,1)
+%?if(%pL, >, 0)<%?pL<%xd(Na)|%xd(Nb)|%xd(Nc)|%xd(Nd)|%xd(Ne)|%xd(Nf)|%xd(Ng)|%xd(Nh)|%xd(Ni)|%xd(Nj)|%xd(Nk)|%xd(Nl)|%xd(Nm)|%xd(Nn)|%xd(No)|%xd(Np)|%xd(Nq)|%xd(Nr)|%xd(Ns)>|%xd(Na)>
+%V(218,183,76,50,1)
+%?if(%pR, >, 0)<%?pR<%xd(Na)|%xd(Nb)|%xd(Nc)|%xd(Nd)|%xd(Ne)|%xd(Nf)|%xd(Ng)|%xd(Nh)|%xd(Ni)|%xd(Nj)|%xd(Nk)|%xd(Nl)|%xd(Nm)|%xd(Nn)|%xd(No)|%xd(Np)|%xd(Nq)|%xd(Nr)|%xd(Ns)>|%xd(Na)>

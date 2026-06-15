@@ -1,0 +1,59 @@
+%Fl(2,12-Roboto-Bold.fnt)
+%Fl(3,8-snap.fnt)
+
+# Load Backdrop
+%X(BackGndSBS_16.bmp)
+
+#Time
+%V(255,221,35,16,3)%Vf(85663f)
+%ac%?cf<%cH:%cM|%cl:%cM %cp>
+
+#Battery
+%xl(B,Battery14x7_16.bmp,0,0,13)
+%V(230,222,14,7,-)
+%?bp<%?bc<%xd(Ba)|%xd(Bb)>|%?bl<|%xd(Bc)|%xd(Bd)|%xd(Be)|%xd(Bf)|%xd(Bg)|%xd(Bh)|%xd(Bi)|%xd(Bj)|%xd(Bk)|%xd(Bl)|%xd(Bm)>>
+
+#hold icon
+%xl(h,i_hold_16.bmp,2)
+%V(304,37,9,9,-)
+%?mh<%xd(ha)|%xd(hb)>
+
+#play icon
+%xl(p,i_play_16.bmp,2)
+%V(304,48,9,7,-)
+%?if(%mp, =, 2)<%xd(pa)|%xd(pb)>
+
+#pause icon
+%xl(q,i_pause_16.bmp,2)
+%V(304,57,9,5,-)
+%?if(%mp, =, 3)<%xd(qa)|%xd(qb)>
+
+#stop icon
+%xl(s,i_stop_16.bmp,2)
+%V(304,64,9,5,-)
+%?if(%mp, =, 1)<%xd(sa)|%xd(sb)>
+
+# Volume icon
+%xl(V,i_volume_16.bmp,11)
+%V(304,71,9,14,-)
+%?pv<%xd(Va)|%xd(Vb)|%xd(Vc)|%xd(Vd)|%xd(Ve)|%xd(Vf)|%xd(Vg)|%xd(Vh)|%xd(Vi)|%xd(Vj)|%xd(Vk)>
+
+
+# default iconset viewport
+%Vi(-,32,20,256,192,1)
+
+# main ui viewport
+#%Vi(MainMenu,32,20,256,192,1)
+
+# if we are on the main screen, draw the list using viewport 'main'
+%?if(%cs, = , 1)<%Lb(MainMenuVP,64,64,tile)%Vd(titlebar)>
+
+# main viewport
+%Vl(MainMenuVP,0,0,64,64,1) # the coordinates here are relative to the %Lb's width and height
+%xl(M,main_iconset_16.bmp,0,0,9) # normal icons
+%xl(S,main_select_iconset_16.bmp,0,0,9) # selected icons
+%?Lc<%xd(S, %LN)|%xd(M, %LN)> # highlights selected icons
+
+# shows the list items title at the bottom of the screen
+%Vl(titlebar,32,216,156,16,1)%Vf(6c4d13)%Vb(bbb5aa)
+%s%ac%LT

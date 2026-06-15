@@ -9,6 +9,8 @@
 %xl(B,battery.bmp,0,0,3)
 %xl(D,divider.bmp,0,0)
 %xl(L,logo.bmp,0,0)
+%xl(F,tile_sel.bmp,0,0)
+%xl(I,__list_icons__,0,0)
 #
 # Status bar band: y=4..23 (4px margins), vertical center y=14.
 #   text 14px -> y=7 | play 16px -> y=5 | shuffle/repeat 12px -> y=7 | logo 20px -> y=4
@@ -59,4 +61,25 @@
 %xd(D)
 #
 # Content area below the bar + divider (menus, browser, WPS)
-%Vi(-,0,32,-,-,1)
+%Vi(d,0,32,320,208,1)
+%Vi(t,0,32,320,208,1)
+#
+# Root: 2x4 tiles. Submenus: list rows. %VI switches viewport binding.
+%?if(%cs,=,1)<%?if(%Lt,=,Rockbox)<%Lb(tile,160,52,tile)%VI(t)|%Lb(row,320,18)%VI(d)>>
+#
+# Tile cells — icon + label; amber frame on selected tile
+%Vl(tile,0,0,160,52,-)
+%?Lc<%xd(F)>
+%Vl(tile,72,8,16,16,-)
+%xd(I,%LI,2)
+%Vl(tile,4,36,152,14,1)
+%?Lc<%Vf(F0E8DC)|%Vf(C89B5A)>
+%s%ac%LT
+#
+# List rows (submenus, browser, settings, etc.)
+%Vl(row,0,0,320,18,1)
+%?Lc<%dr(0,0,320,18,6B5235,8B6F47)>
+%Vl(row,2,1,16,16,1)
+%xd(I,%LI,2)
+%Vl(row,22,1,296,16,1)
+%s%al%LT
