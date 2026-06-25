@@ -5,6 +5,8 @@ A Rockbox theme for the **HiFi Walker H2** (320×240, 16-bit, `erosqnative`). In
 ![Play screen](wps.png)
 ![Menu](menu.png)
 
+![RealLife](RealLife.png)
+
 ## What you get
 
 - **WPS** — album art, peak meters, metadata, custom progress bar with knob
