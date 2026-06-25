@@ -29,7 +29,7 @@ Keep the simulator **outside** this repo (`C:\RockboxSim` is fine). The sim is l
 3. Sync the theme:
 
 ```powershell
-cd C:\git\h2yorushika
+cd C:\git\elmas-diary
 .\scripts\sync-to-sim.ps1
 ```
 

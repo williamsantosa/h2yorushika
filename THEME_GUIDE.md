@@ -187,6 +187,8 @@ Root tiles are gated with `%?if(%Lt,=,Rockbox)`. English menu title only. If you
 
 Album art left, metadata right, peak meters above art, progress bar with `pb_back.bmp` + `knob.bmp` slider. No amber fill inside the bar — only the knob moves.
 
+**Album art draw order:** Rockbox draws `%Cd` first, then `%xd` images. A full `%xd(F)` over art covers it — use `%?C<%Cd|%xd(F)>` for art vs placeholder. When art is present, draw amber `%xd(E/B/L/R)` border strips on a second line (2 px edges only; they sit on top without hiding the cover).
+
 Peak meters use `%pL` / `%pR` over `volbar.bmp` / `vubar.bmp`. Tuning lives in the `.cfg` (`peak meter min` / `max`).
 
 ---

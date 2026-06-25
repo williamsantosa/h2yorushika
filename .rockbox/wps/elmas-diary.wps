@@ -4,6 +4,10 @@
 #
 %X(backdrop.bmp)
 %xl(F,frame.bmp,0,0)
+%xl(E,frame_top.bmp,0,0)
+%xl(B,frame_bottom.bmp,0,138)
+%xl(L,frame_left.bmp,0,2)
+%xl(R,frame_right.bmp,138,2)
 %xl(K,knob.bmp,0,0)
 %xl(G,pb_back.bmp,0,0)
 %xl(P,vubar.bmp,0,0)
@@ -19,11 +23,11 @@
 %V(8,44,140,4,1)
 %pR(1,1,138,2,P,horizontal)
 #
-# Album art 136px, framed
+# Album art 136px — art + border strips, or eye placeholder when missing
 %V(8,48,140,140,1)
-%xd(F)
 %Cl(2,2,136,136,c,c)
-%Cd
+%?C<%Cd|%xd(F)>
+%?C<%xd(E)%xd(B)%xd(L)%xd(R)|>
 #
 # Album
 %V(156,62,156,18,1)

@@ -247,9 +247,8 @@ def make_logo(width: int = 30) -> Image.Image:
     return img
 
 
-def make_frame(size: int = 104) -> Image.Image:
-    """Framed box drawn behind the album art. Album art covers the interior when present;
-    when absent, the dim eye placeholder shows."""
+def make_frame(size: int = 140) -> Image.Image:
+    """No-art placeholder: oxblood fill, amber border, dim eye logo."""
     img = Image.new("RGB", (size, size), TRACK)
     d = ImageDraw.Draw(img)
     d.rectangle([0, 0, size - 1, size - 1], outline=AMBER, width=2)
@@ -257,6 +256,19 @@ def make_frame(size: int = 104) -> Image.Image:
     w, h = gray.size
     paint_eye(img, (size - w) // 2, (size - h) // 2, gray, AMBER)
     return img
+
+
+def make_frame_borders(outer: int = 140, border: int = 2, inner: int = 136) -> dict[str, Image.Image]:
+    """Amber border strips drawn over album art (%xd after %Cd in Rockbox)."""
+    side = inner
+    bar_h = Image.new("RGB", (outer, border), AMBER)
+    bar_v = Image.new("RGB", (border, side), AMBER)
+    return {
+        "frame_top.bmp": bar_h,
+        "frame_bottom.bmp": bar_h.copy(),
+        "frame_left.bmp": bar_v,
+        "frame_right.bmp": bar_v.copy(),
+    }
 
 
 def make_volbar(w: int = 140, h: int = 4) -> Image.Image:
@@ -761,6 +773,8 @@ def main() -> None:
     save_bmp(OUT / "pb_back.bmp", make_pb_back())
     save_bmp(OUT / "logo.bmp", make_logo())
     save_bmp(OUT / "frame.bmp", make_frame(140))
+    for name, img in make_frame_borders().items():
+        save_bmp(OUT / name, img)
     save_bmp(OUT / "playmode.bmp", make_playmode())
     save_bmp(OUT / "shuffle.bmp", make_shuffle())
     save_bmp(OUT / "repeat.bmp", make_repeat())
